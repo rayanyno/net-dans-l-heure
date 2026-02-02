@@ -3,23 +3,22 @@ import { Link } from 'react-router-dom';
 import { CheckCircle, Shield, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 import { SITE_CONFIG } from '../config';
 
-const UrssafPage = () => {
-  const [openFaq, setOpenFaq] = useState(null);
+const FaqItem = ({ question, answer, isOpen, onClick }) => (
+  <div className="faq-item">
+    <button className="faq-question" onClick={onClick}>
+      {question}
+      {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+    </button>
+    {isOpen && <div className="faq-answer">{answer}</div>}
+  </div>
+);
 
-  const faqs = [
-    {
-      question: "Dois-je créer un compte URSSAF ?",
-      answer: "Non, ce n'est pas obligatoire. Si vous ne souhaitez pas bénéficier de l'avance immédiate, vous déclarerez simplement vos dépenses lors de votre déclaration annuelle d'impôts et recevrez votre crédit d'impôt l'année suivante."
-    },
-    {
-      question: "Quelle est la différence entre CESU et prestataire agréé ?",
-      answer: `Avec le CESU, vous êtes employeur et devez gérer les bulletins de paie. Avec un prestataire agréé comme ${SITE_CONFIG.companyName}, nous sommes l'employeur, vous n'avez aucune démarche administrative à effectuer.`
-    },
-    {
-      question: "Comment obtenir mon attestation fiscale ?",
-      answer: "Nous vous envoyons automatiquement votre attestation fiscale au début de chaque année pour les prestations de l'année précédente. Elle est également disponible dans votre espace client."
-    }
-  ];
+const UrssafPage = () => {
+  const [openFaq, setOpenFaq] = useState(-1);
+
+  const toggleFaq = (idx) => {
+    setOpenFaq(openFaq === idx ? -1 : idx);
+  };
 
   return (
     <div className="page urssaf-page" data-testid="urssaf-page">
@@ -97,20 +96,24 @@ const UrssafPage = () => {
 
       <section className="faq-section">
         <h2>Questions fréquentes</h2>
-        {faqs.map((faq, idx) => (
-          <div key={idx} className="faq-item" data-testid={`faq-item-${idx}`}>
-            <button 
-              className="faq-question" 
-              onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-            >
-              {faq.question}
-              {openFaq === idx ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-            </button>
-            {openFaq === idx && (
-              <div className="faq-answer">{faq.answer}</div>
-            )}
-          </div>
-        ))}
+        <FaqItem
+          question="Dois-je créer un compte URSSAF ?"
+          answer="Non, ce n'est pas obligatoire. Si vous ne souhaitez pas bénéficier de l'avance immédiate, vous déclarerez simplement vos dépenses lors de votre déclaration annuelle d'impôts et recevrez votre crédit d'impôt l'année suivante."
+          isOpen={openFaq === 0}
+          onClick={() => toggleFaq(0)}
+        />
+        <FaqItem
+          question="Quelle est la différence entre CESU et prestataire agréé ?"
+          answer={`Avec le CESU, vous êtes employeur et devez gérer les bulletins de paie. Avec un prestataire agréé comme ${SITE_CONFIG.companyName}, nous sommes l'employeur, vous n'avez aucune démarche administrative à effectuer.`}
+          isOpen={openFaq === 1}
+          onClick={() => toggleFaq(1)}
+        />
+        <FaqItem
+          question="Comment obtenir mon attestation fiscale ?"
+          answer="Nous vous envoyons automatiquement votre attestation fiscale au début de chaque année pour les prestations de l'année précédente. Elle est également disponible dans votre espace client."
+          isOpen={openFaq === 2}
+          onClick={() => toggleFaq(2)}
+        />
       </section>
 
       <section className="useful-links">
