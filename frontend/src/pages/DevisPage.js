@@ -5,41 +5,27 @@ import { API } from '../config';
 
 const DevisPage = () => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    services: [],
-    frequence: '',
-    adresse: '',
-    code_postal: '',
-    ville: '',
-    nom: '',
-    email: '',
-    telephone: '',
-    commentaire: ''
-  });
+  const [selectedServices, setSelectedServices] = useState([]);
+  const [frequence, setFrequence] = useState('');
+  const [adresse, setAdresse] = useState('');
+  const [codePostal, setCodePostal] = useState('');
+  const [ville, setVille] = useState('');
+  const [nom, setNom] = useState('');
+  const [email, setEmail] = useState('');
+  const [telephone, setTelephone] = useState('');
+  const [commentaire, setCommentaire] = useState('');
   const [status, setStatus] = useState(null);
 
-  const services = [
-    { id: 'menage', label: 'Ménage & Entretien', icon: <HomeIcon size={24} /> },
-    { id: 'garde', label: "Garde d'enfants", icon: <Baby size={24} /> },
-    { id: 'jardinage', label: 'Jardinage', icon: <Leaf size={24} /> },
-    { id: 'bricolage', label: 'Petit bricolage', icon: <Wrench size={24} /> },
-    { id: 'seniors', label: 'Aide aux seniors', icon: <Heart size={24} /> }
-  ];
-
-  const frequences = [
-    { id: 'ponctuel', label: 'Intervention ponctuelle' },
-    { id: 'hebdo', label: '1 fois par semaine' },
-    { id: 'bi-hebdo', label: '2 fois par semaine' },
-    { id: 'mensuel', label: '1 fois par mois' }
-  ];
-
   const toggleService = (serviceId) => {
-    setFormData(prev => ({
-      ...prev,
-      services: prev.services.includes(serviceId)
-        ? prev.services.filter(s => s !== serviceId)
-        : [...prev.services, serviceId]
-    }));
+    if (selectedServices.indexOf(serviceId) >= 0) {
+      setSelectedServices(selectedServices.filter(s => s !== serviceId));
+    } else {
+      setSelectedServices([...selectedServices, serviceId]);
+    }
+  };
+
+  const isServiceSelected = (serviceId) => {
+    return selectedServices.indexOf(serviceId) >= 0;
   };
 
   const handleSubmit = async () => {
@@ -48,7 +34,17 @@ const DevisPage = () => {
       await fetch(`${API}/devis`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          services: selectedServices,
+          frequence,
+          adresse,
+          code_postal: codePostal,
+          ville,
+          nom,
+          email,
+          telephone,
+          commentaire
+        })
       });
       setStatus('success');
     } catch (error) {
@@ -57,13 +53,11 @@ const DevisPage = () => {
   };
 
   const canProceed = () => {
-    switch(step) {
-      case 1: return formData.services.length > 0;
-      case 2: return formData.frequence !== '';
-      case 3: return formData.adresse && formData.code_postal && formData.ville;
-      case 4: return formData.nom && formData.email && formData.telephone;
-      default: return false;
-    }
+    if (step === 1) return selectedServices.length > 0;
+    if (step === 2) return frequence !== '';
+    if (step === 3) return adresse && codePostal && ville;
+    if (step === 4) return nom && email && telephone;
+    return false;
   };
 
   if (status === 'success') {
@@ -79,6 +73,8 @@ const DevisPage = () => {
     );
   }
 
+  const progressWidth = `${(step/4)*100}%`;
+
   return (
     <div className="page devis-page" data-testid="devis-page">
       <section className="page-header">
@@ -88,8 +84,8 @@ const DevisPage = () => {
       </section>
 
       <div className="devis-progress">
-        <div className="progress-bar" style={{width: `${(step/4)*100}%`}}></div>
-        <span>Étape {step} sur 4 — {(step/4)*100}%</span>
+        <div className="progress-bar" style={{width: progressWidth}}></div>
+        <span>Étape {step} sur 4</span>
       </div>
 
       <div className="devis-form" data-testid="devis-form">
@@ -97,18 +93,51 @@ const DevisPage = () => {
           <div className="devis-step" data-testid="devis-step-1">
             <h2>Quel service vous intéresse ?</h2>
             <div className="services-select">
-              {services.map(service => (
-                <button
-                  key={service.id}
-                  className={`service-option ${formData.services.includes(service.id) ? 'selected' : ''}`}
-                  onClick={() => toggleService(service.id)}
-                  data-testid={`service-option-${service.id}`}
-                >
-                  {service.icon}
-                  <span>{service.label}</span>
-                  {formData.services.includes(service.id) && <CheckCircle size={20} />}
-                </button>
-              ))}
+              <button
+                className={`service-option ${isServiceSelected('menage') ? 'selected' : ''}`}
+                onClick={() => toggleService('menage')}
+                data-testid="service-option-menage"
+              >
+                <HomeIcon size={24} />
+                <span>Ménage & Entretien</span>
+                {isServiceSelected('menage') && <CheckCircle size={20} />}
+              </button>
+              <button
+                className={`service-option ${isServiceSelected('garde') ? 'selected' : ''}`}
+                onClick={() => toggleService('garde')}
+                data-testid="service-option-garde"
+              >
+                <Baby size={24} />
+                <span>Garde d'enfants</span>
+                {isServiceSelected('garde') && <CheckCircle size={20} />}
+              </button>
+              <button
+                className={`service-option ${isServiceSelected('jardinage') ? 'selected' : ''}`}
+                onClick={() => toggleService('jardinage')}
+                data-testid="service-option-jardinage"
+              >
+                <Leaf size={24} />
+                <span>Jardinage</span>
+                {isServiceSelected('jardinage') && <CheckCircle size={20} />}
+              </button>
+              <button
+                className={`service-option ${isServiceSelected('bricolage') ? 'selected' : ''}`}
+                onClick={() => toggleService('bricolage')}
+                data-testid="service-option-bricolage"
+              >
+                <Wrench size={24} />
+                <span>Petit bricolage</span>
+                {isServiceSelected('bricolage') && <CheckCircle size={20} />}
+              </button>
+              <button
+                className={`service-option ${isServiceSelected('seniors') ? 'selected' : ''}`}
+                onClick={() => toggleService('seniors')}
+                data-testid="service-option-seniors"
+              >
+                <Heart size={24} />
+                <span>Aide aux seniors</span>
+                {isServiceSelected('seniors') && <CheckCircle size={20} />}
+              </button>
             </div>
           </div>
         )}
@@ -117,16 +146,34 @@ const DevisPage = () => {
           <div className="devis-step" data-testid="devis-step-2">
             <h2>À quelle fréquence ?</h2>
             <div className="frequence-select">
-              {frequences.map(freq => (
-                <button
-                  key={freq.id}
-                  className={`freq-option ${formData.frequence === freq.id ? 'selected' : ''}`}
-                  onClick={() => setFormData({...formData, frequence: freq.id})}
-                  data-testid={`freq-option-${freq.id}`}
-                >
-                  {freq.label}
-                </button>
-              ))}
+              <button
+                className={`freq-option ${frequence === 'ponctuel' ? 'selected' : ''}`}
+                onClick={() => setFrequence('ponctuel')}
+                data-testid="freq-option-ponctuel"
+              >
+                Intervention ponctuelle
+              </button>
+              <button
+                className={`freq-option ${frequence === 'hebdo' ? 'selected' : ''}`}
+                onClick={() => setFrequence('hebdo')}
+                data-testid="freq-option-hebdo"
+              >
+                1 fois par semaine
+              </button>
+              <button
+                className={`freq-option ${frequence === 'bi-hebdo' ? 'selected' : ''}`}
+                onClick={() => setFrequence('bi-hebdo')}
+                data-testid="freq-option-bi-hebdo"
+              >
+                2 fois par semaine
+              </button>
+              <button
+                className={`freq-option ${frequence === 'mensuel' ? 'selected' : ''}`}
+                onClick={() => setFrequence('mensuel')}
+                data-testid="freq-option-mensuel"
+              >
+                1 fois par mois
+              </button>
             </div>
           </div>
         )}
@@ -138,8 +185,8 @@ const DevisPage = () => {
               <label>Adresse</label>
               <input 
                 type="text" 
-                value={formData.adresse}
-                onChange={(e) => setFormData({...formData, adresse: e.target.value})}
+                value={adresse}
+                onChange={(e) => setAdresse(e.target.value)}
                 placeholder="Numéro et rue"
                 data-testid="devis-input-adresse"
               />
@@ -149,8 +196,8 @@ const DevisPage = () => {
                 <label>Code postal</label>
                 <input 
                   type="text" 
-                  value={formData.code_postal}
-                  onChange={(e) => setFormData({...formData, code_postal: e.target.value})}
+                  value={codePostal}
+                  onChange={(e) => setCodePostal(e.target.value)}
                   placeholder="25000"
                   data-testid="devis-input-cp"
                 />
@@ -159,8 +206,8 @@ const DevisPage = () => {
                 <label>Ville</label>
                 <input 
                   type="text" 
-                  value={formData.ville}
-                  onChange={(e) => setFormData({...formData, ville: e.target.value})}
+                  value={ville}
+                  onChange={(e) => setVille(e.target.value)}
                   placeholder="Ville"
                   data-testid="devis-input-ville"
                 />
@@ -176,8 +223,8 @@ const DevisPage = () => {
               <label>Nom complet</label>
               <input 
                 type="text" 
-                value={formData.nom}
-                onChange={(e) => setFormData({...formData, nom: e.target.value})}
+                value={nom}
+                onChange={(e) => setNom(e.target.value)}
                 data-testid="devis-input-nom"
               />
             </div>
@@ -185,8 +232,8 @@ const DevisPage = () => {
               <label>Email</label>
               <input 
                 type="email" 
-                value={formData.email}
-                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 data-testid="devis-input-email"
               />
             </div>
@@ -194,16 +241,16 @@ const DevisPage = () => {
               <label>Téléphone</label>
               <input 
                 type="tel" 
-                value={formData.telephone}
-                onChange={(e) => setFormData({...formData, telephone: e.target.value})}
+                value={telephone}
+                onChange={(e) => setTelephone(e.target.value)}
                 data-testid="devis-input-telephone"
               />
             </div>
             <div className="form-group">
               <label>Commentaire (optionnel)</label>
               <textarea 
-                value={formData.commentaire}
-                onChange={(e) => setFormData({...formData, commentaire: e.target.value})}
+                value={commentaire}
+                onChange={(e) => setCommentaire(e.target.value)}
                 rows={3}
                 data-testid="devis-input-commentaire"
               />
