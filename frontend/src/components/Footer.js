@@ -7,7 +7,7 @@ const Footer = () => (
   <footer className="footer" data-testid="footer">
     <div className="footer-content">
       <div className="footer-section">
-        <h3>{SITE_CONFIG.companyName}</h3>
+        <img src={SITE_CONFIG.logo} alt={SITE_CONFIG.companyName} className="footer-logo" />
         <p>Services à la personne agréés dans la région Belfort - Montbéliard - Mulhouse.</p>
         <div className="footer-contact">
           <a href={`tel:${SITE_CONFIG.phone}`}><Phone size={16} /> {SITE_CONFIG.phoneFormatted}</a>
