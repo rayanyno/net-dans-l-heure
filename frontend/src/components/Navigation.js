@@ -3,17 +3,32 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Phone } from 'lucide-react';
 import { SITE_CONFIG } from '../config';
 
+const NavLink = ({ to, label, isActive, onClick }) => (
+  <Link
+    to={to}
+    className={`nav-link ${isActive ? 'active' : ''}`}
+    onClick={onClick}
+  >
+    {label}
+  </Link>
+);
+
+const MobileNavLink = ({ to, label, isActive, onClick }) => (
+  <Link
+    to={to}
+    className={`nav-mobile-link ${isActive ? 'active' : ''}`}
+    onClick={onClick}
+  >
+    {label}
+  </Link>
+);
+
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const path = location.pathname;
 
-  const navLinks = [
-    { path: '/', label: 'Accueil' },
-    { path: '/services', label: 'Services' },
-    { path: '/credit-impot', label: "Crédit d'impôt" },
-    { path: '/urssaf', label: 'URSSAF' },
-    { path: '/contact', label: 'Contact' },
-  ];
+  const closeMenu = () => setIsOpen(false);
 
   return (
     <nav className="nav-container" data-testid="main-navigation">
@@ -24,16 +39,11 @@ const Navigation = () => {
         </Link>
 
         <div className="nav-links-desktop">
-          {navLinks.map(link => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`nav-link ${location.pathname === link.path ? 'active' : ''}`}
-              data-testid={`nav-link-${link.path.replace('/', '') || 'home'}`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          <NavLink to="/" label="Accueil" isActive={path === '/'} />
+          <NavLink to="/services" label="Services" isActive={path === '/services'} />
+          <NavLink to="/credit-impot" label="Crédit d'impôt" isActive={path === '/credit-impot'} />
+          <NavLink to="/urssaf" label="URSSAF" isActive={path === '/urssaf'} />
+          <NavLink to="/contact" label="Contact" isActive={path === '/contact'} />
         </div>
 
         <div className="nav-actions">
@@ -57,17 +67,12 @@ const Navigation = () => {
 
       {isOpen && (
         <div className="nav-mobile-menu" data-testid="mobile-menu">
-          {navLinks.map(link => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`nav-mobile-link ${location.pathname === link.path ? 'active' : ''}`}
-              onClick={() => setIsOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
-          <Link to="/devis" className="btn-primary mobile-cta" onClick={() => setIsOpen(false)}>
+          <MobileNavLink to="/" label="Accueil" isActive={path === '/'} onClick={closeMenu} />
+          <MobileNavLink to="/services" label="Services" isActive={path === '/services'} onClick={closeMenu} />
+          <MobileNavLink to="/credit-impot" label="Crédit d'impôt" isActive={path === '/credit-impot'} onClick={closeMenu} />
+          <MobileNavLink to="/urssaf" label="URSSAF" isActive={path === '/urssaf'} onClick={closeMenu} />
+          <MobileNavLink to="/contact" label="Contact" isActive={path === '/contact'} onClick={closeMenu} />
+          <Link to="/devis" className="btn-primary mobile-cta" onClick={closeMenu}>
             Devis gratuit
           </Link>
         </div>
