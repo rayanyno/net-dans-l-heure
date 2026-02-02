@@ -34,8 +34,7 @@ const Navigation = () => {
     <nav className="nav-container" data-testid="main-navigation">
       <div className="nav-content">
         <Link to="/" className="nav-logo" data-testid="nav-logo">
-          <span className="logo-icon">🏠</span>
-          <span className="logo-text">{SITE_CONFIG.companyName}</span>
+          <img src={SITE_CONFIG.logo} alt={SITE_CONFIG.companyName} className="logo-image" />
         </Link>
 
         <div className="nav-links-desktop">
