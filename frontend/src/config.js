@@ -9,7 +9,7 @@ export const SITE_CONFIG = {
   agrementNumber: "994435865",
   siret: "994 435 865",
   logo: "https://customer-assets.emergentagent.com/job_homecare-preview/artifacts/b9u18l0s_IMG_2320.jpeg",
-  sapImage: "https://www.servicesalapersonne.gouv.fr/sites/default/files/inline-images/LogoSAP_1.png"
+  sapImage: "https://customer-assets.emergentagent.com/job_homecare-preview/artifacts/ql9ucnyj_Logo_page-0001.jpg"
 };
 
 export const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
