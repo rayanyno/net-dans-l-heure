@@ -8,7 +8,8 @@ export const SITE_CONFIG = {
   companyName: "Net Dans L'Heure",
   agrementNumber: "994435865",
   siret: "994 435 865",
-  logo: "https://customer-assets.emergentagent.com/job_homecare-preview/artifacts/b9u18l0s_IMG_2320.jpeg"
+  logo: "https://customer-assets.emergentagent.com/job_homecare-preview/artifacts/b9u18l0s_IMG_2320.jpeg",
+  sapImage: "https://www.servicesalapersonne.gouv.fr/sites/default/files/inline-images/LogoSAP_1.png"
 };
 
 export const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
