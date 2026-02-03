@@ -971,6 +971,17 @@ main {
   margin-bottom: 2rem;
 }
 
+.sap-image-container {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.sap-image {
+  max-width: 350px;
+  width: 100%;
+  height: auto;
+}
+
 .agrement-box {
   display: flex;
   gap: 1rem;
