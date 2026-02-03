@@ -55,7 +55,7 @@ const HomePage = () => (
           <p>Petits travaux, montage de meubles</p>
         </div>
         <div className="service-card" data-testid="service-seniors">
-          <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=400" alt="Aide aux seniors" />
+          <img src="https://images.unsplash.com/photo-1761839257513-a921710a4291?w=400" alt="Aide aux seniors" />
           <h3>Aide aux seniors</h3>
           <p>Accompagnement, aide au quotidien</p>
         </div>
