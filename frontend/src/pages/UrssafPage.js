@@ -32,10 +32,6 @@ const UrssafPage = () => {
         <h2>Qu'est-ce que l'URSSAF ?</h2>
         <p>L'URSSAF (Union de Recouvrement des cotisations de Sécurité Sociale et d'Allocations Familiales) est l'organisme chargé de collecter les cotisations sociales en France. Dans le cadre des services à la personne, l'URSSAF propose également le service d'avance immédiate du crédit d'impôt.</p>
         
-        <div className="sap-image-container">
-          <img src={SITE_CONFIG.sapImage} alt="Services à la personne" className="sap-image" />
-        </div>
-        
         <div className="agrement-box">
           <Shield size={24} />
           <div>
